@@ -1,7 +1,7 @@
 <?php
 
 $request = $_SERVER['REQUEST_URI'];
-echo $request."<br>";
+//echo $request."<br>";
 
 switch ($request) {
     case '/' :
