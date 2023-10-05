@@ -1,8 +1,10 @@
-var btnPrenota, stanze;
+var btnPrenota, stanze, btnPrenotazioni;
 
 window.onload = async function(){
     btnPrenota = document.getElementById("btnPrenota");
     btnPrenota.addEventListener("click", prenota);
+    btnPrenotazioni = document.getElementById("btnPrenotazioni");
+    btnPrenotazioni.addEventListener("click", prenotazioni);
 
     console.log("prova");
     let busta = await fetch("getStanze", {method:'GET'});
@@ -73,4 +75,53 @@ function prenota(){
             alert("Email obbligatoria");
     }else
         alert("Nessuna stanza è stata selezionata!");
+}
+
+async function prenotazioni(){
+    document.getElementById("divPrenota").style.display = "none";
+    document.getElementById("divPrenotazioni").style.display = "flex";
+
+    let busta = await fetch("getPrenotazioni",  {method:'GET'});
+    let risposta = await busta.json();
+    
+    let elenco = document.getElementById("tbodyPrenotazioni")
+    let tr, td, data, data2;
+    for(let item of risposta.prenotazioni){
+        tr =  document.createElement("tr");
+        td = document.createElement("td");
+        data = new Date(item.inizioSoggiorno);
+        data2 = new Date(item.fineSoggiorno);
+        td.innerHTML = data.getDate() + "/" + (data.getMonth()+1) + "<br>" + data2.getDate() + "/" + (data2.getMonth()+1);
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.innerHTML = item.email.substring(0, item.email.indexOf("@"));
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.innerHTML = item.codStanza;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        if(item.pagato == 1)
+            td.innerHTML = `<span class="material-symbols-outlined">paid</span>`;
+        else{
+            td.innerHTML = `<span class="material-symbols-outlined">money_off</span>`;
+            td.addEventListener("click", ()=>{
+                console.log(item);
+                alert("Paga!!");
+            });
+        }
+        tr.appendChild(td);
+        elenco.appendChild(tr);
+    }
+
+
+    let html = `
+        <tr>
+            <td>06/08<br>08/08</td>
+            <td>mario.rossi</td>
+            <td>N. 10</td>
+            <td><span class="material-symbols-outlined">paid</span></td>
+        </tr>
+    `;
+
+    
 }

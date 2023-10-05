@@ -16,6 +16,10 @@ switch ($request) {
     case '/getStanze' :
         include("server/stanze.php");
         break;
+    
+    case '/getPrenotazioni' :
+        include("server/getPrenotazioni.php");
+        break;
 
     default:
         echo "Nessuna risorsa trovata";
